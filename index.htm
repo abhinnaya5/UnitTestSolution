@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search UI Test</title>
+    <style>
+        .container {
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .result {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search UI Test</h1>
+        <div class="input-group">
+            <label for="nums">Array:</label>
+            <input type="text" id="nums" value="4, 5, 6, 7, 0, 1, 2">
+        </div>
+        <div class="input-group">
+            <label for="target">Target:</label>
+            <input type="text" id="target" value="0">
+        </div>
+        <button onclick="runTest()">Run Test</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function search(nums, target) {
+            // Convert the string input to an array of numbers
+            nums = nums.split(',').map(Number);
+
+            let left = 0;
+            let right = nums.length - 1;
+
+            while (left <= right) {
+                let mid = left + Math.floor((right - left) / 2);
+
+                if (nums[mid] === target) {
+                    return mid;
+                }
+
+                // If the left half is sorted
+                if (nums[left] <= nums[mid]) {
+                    // Check if the target lies within the left half
+                    if (target >= nums[left] && target < nums[mid]) {
+                        right = mid - 1;
+                    }
+                    else {
+                        left = mid + 1;
+                    }
+                }
+                // If the right half is sorted
+                else {
+                    // Check if the target lies within the right half
+                    if (target > nums[mid] && target <= nums[right]) {
+                        left = mid + 1;
+                    }
+                    else {
+                        right = mid - 1;
+                    }
+                }
+            }
+
+            return -1;  // Target element not found
+        }
+
+        function runTest() {
+            const numsInput = document.getElementById('nums');
+            const targetInput = document.getElementById('target');
+            const resultDiv = document.getElementById('result');
+
+            const nums = numsInput.value.trim();
+            const target = parseInt(targetInput.value);
+
+            const result = search(nums, target);
+
+            resultDiv.textContent = `Target index: ${result}`;
+        }
+    </script>
+</body>
+</html>
